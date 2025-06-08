@@ -1,23 +1,30 @@
-export default class WebHarpString extends HTMLElement {
-  strum(params){}
+import WebHarpString from  "../string/string.js"
 
-  stopStrum(){}
-
+export default class WebHarpStrings extends HTMLElement {
 
   connectedCallback(){
-    this.innerHTML = `<div class="line"></div>
-      <style>
-        webharp-string > .line {
-          background-color: white;
-          height: 100%
-          width: 2px
+    let strings = `<div class="spacer"></div>`;
+    for (let c = 0; c < this.getAttribute('strings'); c++) {
+      strings += `<webharp-string></webharp-string>`;      
+    }
+
+     strings += `
+       <style>
+        webharp-strings {
+          height: 100%;
+          display: flex;
+        }
+        webharp-strings > webharp-string, div.spacer {
+         flex: 1;
         }
       </style>
-    `;
+     `;
+    this.innerHTML = strings;
+    this.stringsElments = this.querySelectorAll('webharp-string')
   }
 
 }
 
-if(!customElements.get('webharp-string')){
-  customElements.define('webharp-string', WebHarpString);
+if(!customElements.get('webharp-strings')){
+  customElements.define('webharp-strings', WebHarpStrings);
 }
