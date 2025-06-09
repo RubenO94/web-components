@@ -1,10 +1,34 @@
+import { MIDI } from '../../midi.min';
+
 export default class WebHarpString extends HTMLElement {
-  strum(params){}
+  connectedCallback() {
+    MIDI.loadPlugin({});
+  }
 
-  stopStrum(){}
+  strum(params) {
+    if (this.timer) clearTimeout(this.timer);
 
+    let dur = params.power * 10 + 250;
+    this.classList.add('shake', 'shake-constant', 'shake-horizontal');
 
-  connectedCallback(){
+    if (dur < 500) {
+      this.classList.add('shake-little');
+    }
+
+    this.timer = setTimeout(() => this.stopStrum(), 1000);
+    console.log(params);
+  }
+
+  stopStrum() {
+    this.classList.remove(
+      'shake',
+      'shake-constant',
+      'shake-horizontal',
+      'shake-little'
+    );
+  }
+
+  connectedCallback() {
     this.innerHTML = `<div class="line"></div>
       <style>
         webharp-string > .line {
@@ -15,9 +39,8 @@ export default class WebHarpString extends HTMLElement {
       </style>
     `;
   }
-
 }
 
-if(!customElements.get('webharp-string')){
+if (!customElements.get('webharp-string')) {
   customElements.define('webharp-string', WebHarpString);
 }

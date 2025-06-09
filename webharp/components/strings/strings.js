@@ -1,14 +1,13 @@
-import WebHarpString from  "../string/string.js"
-
+import WebHarpString from '../string/string.js'; //es-lint disable
 export default class WebHarpStrings extends HTMLElement {
-
-  connectedCallback(){
+  connectedCallback() {
+    console.log(WebHarpString);
     let strings = `<div class="spacer"></div>`;
     for (let c = 0; c < this.getAttribute('strings'); c++) {
-      strings += `<webharp-string></webharp-string>`;      
+      strings += `<webharp-string></webharp-string>`;
     }
 
-     strings += `
+    strings += `
        <style>
         webharp-strings {
           height: 100%;
@@ -20,11 +19,32 @@ export default class WebHarpStrings extends HTMLElement {
       </style>
      `;
     this.innerHTML = strings;
-    this.stringsElments = this.querySelectorAll('webharp-string')
+    this.stringsElement = this.querySelectorAll('webharp-string');
   }
 
+  set points(pts) {
+    if (!this.stringsElement) return;
+
+    if (!pts.last || !pts.current) return;
+
+    let magnitude = Math.abs(pts.current.x - pts.last.x);
+    let xMin = Math.min(pts.current.x, pts.last.x);
+    let xMax = Math.max(pts.current.x, pts.last.x);
+
+    for (let d = 0; d < this.stringsElement.length; d++) {
+      if (
+        xMin <= this.stringsElement[d].offsetLeft &&
+        xMax >= this.stringsElement[d].offsetLeft
+      ) {
+        let strum = { power: magnitude, strig: d };
+        this.stringsElement[d].strum(strum);
+      }
+    }
+
+    return pts;
+  }
 }
 
-if(!customElements.get('webharp-strings')){
+if (!customElements.get('webharp-strings')) {
   customElements.define('webharp-strings', WebHarpStrings);
 }
