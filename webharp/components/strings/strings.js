@@ -36,7 +36,7 @@ export default class WebHarpStrings extends HTMLElement {
         xMin <= this.stringsElement[d].offsetLeft &&
         xMax >= this.stringsElement[d].offsetLeft
       ) {
-        let strum = { power: magnitude, strig: d };
+        let strum = { power: magnitude, string: d };
         this.stringsElement[d].strum(strum);
       }
     }
